@@ -1,0 +1,774 @@
+[
+  {
+    "date": "2026-05-24",
+    "fund_code": "005914",
+    "fund_name": "景顺长城智能生活A",
+    "quant_score": 7.85,
+    "reason": "全市场最高分，趋势最强+波动收敛+经理优秀+RSI健康",
+    "target_return": 8.0,
+    "stop_loss": -5.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "outcome": {
+      "buy_date": "2026-05-25",
+      "sell_date": "2026-06-05",
+      "buy_nav": 5.7819,
+      "sell_nav": 5.6634,
+      "actual_return": -2.05,
+      "annualized_return": -68.02,
+      "holding_days": 11,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-05-24",
+    "fund_code": "006345",
+    "fund_name": "景顺长城量化新动力",
+    "quant_score": 7.25,
+    "reason": "动量增强+RSI未超买+量化抗干扰+夏普1.05",
+    "target_return": 5.0,
+    "stop_loss": -4.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "outcome": {
+      "buy_date": "2026-05-25",
+      "sell_date": "2026-06-05",
+      "buy_nav": 0.8807,
+      "sell_nav": 0.8679,
+      "actual_return": -1.45,
+      "annualized_return": -48.11,
+      "holding_days": 11,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-05-24",
+    "fund_code": "000751",
+    "fund_name": "嘉实新兴产业A",
+    "quant_score": 7.25,
+    "reason": "趋势稳健+波动下降+均衡配置+新兴产业主线",
+    "target_return": 5.0,
+    "stop_loss": -5.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "outcome": {
+      "buy_date": "2026-05-25",
+      "sell_date": "2026-06-05",
+      "buy_nav": 5.082,
+      "sell_nav": 4.965,
+      "actual_return": -2.3,
+      "annualized_return": -76.32,
+      "holding_days": 11,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-05-24",
+    "fund_code": "000689",
+    "fund_name": "前海开源新经济A",
+    "quant_score": 7.25,
+    "reason": "趋势与动量配合+新经济主题+RSI健康",
+    "target_return": 5.0,
+    "stop_loss": -5.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "outcome": {
+      "buy_date": "2026-05-25",
+      "sell_date": "2026-06-05",
+      "buy_nav": 3.59,
+      "sell_nav": 3.3347,
+      "actual_return": -7.11,
+      "annualized_return": -235.92,
+      "holding_days": 11,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-05-24",
+    "fund_code": "164906",
+    "fund_name": "交银中证海外中国互联网",
+    "quant_score": 7.55,
+    "reason": "底部反转+估值低位+AI催化+弹性最大",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "outcome": {
+      "buy_date": "2026-05-25",
+      "sell_date": "2026-06-04",
+      "buy_nav": 0.9775,
+      "sell_nav": 0.9757,
+      "actual_return": -0.18,
+      "annualized_return": -6.57,
+      "holding_days": 10,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "002189",
+    "fund_name": "001072），⬇️降级1只",
+    "quant_score": 3.4,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 5,
+      "macd": 3,
+      "volatility": 8,
+      "sharpe": 2,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 2.2747,
+      "sell_nav": 2.2747,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "001956",
+    "fund_name": "007531/002170/006392）已全部排除，绝不强",
+    "quant_score": 7.2,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 10,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 2,
+      "sharpe": 10,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 4.0746,
+      "sell_nav": 4.0746,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "001072",
+    "fund_name": "| **15%** | 卫星仓，消费防御底仓 |",
+    "quant_score": 6.2,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 5,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 5,
+      "sharpe": 10,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 4.96,
+      "sell_nav": 4.96,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "006132",
+    "fund_name": "| **5%** | 卫星仓",
+    "quant_score": 2.9,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 5,
+      "macd": 3,
+      "volatility": 5,
+      "sharpe": 2,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 3.0322,
+      "sell_nav": 3.0322,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "163406",
+    "fund_name": "| 兴全合润分级混合 | 8.6/10 | 技术形态最完美+",
+    "quant_score": 6.2,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 3,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 10,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 2.4295,
+      "sell_nav": 2.4295,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "000311",
+    "fund_name": "| 景顺长城沪深300指数增强 | 8.2/10 | 高夏普",
+    "quant_score": 5.9,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 3,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 7,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 2.794,
+      "sell_nav": 2.794,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "110011",
+    "fund_name": "| 易方达中小盘混合 | 8.5/10 | 基本面评分9.5",
+    "quant_score": 4.4,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 8,
+      "volatility": 7,
+      "sharpe": 2,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 4.3407,
+      "sell_nav": 4.3407,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "001011",
+    "fund_name": "| 华夏希望债券A | 8.5/10 | 低波动压舱石，情绪",
+    "quant_score": 4.2,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 8,
+      "sharpe": 2,
+      "drawdown": 10
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 1.2514,
+      "sell_nav": 1.2514,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "165520",
+    "fund_name": "信诚中证800有色指数",
+    "quant_score": 2.6,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 2,
+      "sharpe": 2,
+      "drawdown": 2
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 2.6973,
+      "sell_nav": 2.6973,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "165520",
+    "fund_name": "信诚沪深300A** | **40%** | 核心进攻仓位，",
+    "quant_score": 2.6,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 2,
+      "sharpe": 2,
+      "drawdown": 2
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 2.6973,
+      "sell_nav": 2.6973,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "fund_code": "165520",
+    "fund_name": "中信保诚沪深300A** 在以下环节被一致否决：",
+    "quant_score": 2.6,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 2,
+      "sharpe": 2,
+      "drawdown": 2
+    },
+    "outcome": {
+      "buy_date": "2026-06-08",
+      "sell_date": "2026-06-08",
+      "buy_nav": 2.6973,
+      "sell_nav": 2.6973,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "000311",
+    "fund_name": "华安增强、165515 信诚LOF、165520 信诚分级B",
+    "quant_score": 5.7,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 3,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 5,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 2.849,
+      "sell_nav": 2.82,
+      "actual_return": -1.02,
+      "annualized_return": -372.3,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "160706",
+    "fund_name": "嘉实联接、110020 易方达联接、005658 富国增强、",
+    "quant_score": 5.7,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 3,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 5,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 1.2256,
+      "sell_nav": 1.2139,
+      "actual_return": -0.95,
+      "annualized_return": -346.75,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "000051",
+    "fund_name": "华夏联接 |",
+    "quant_score": 5.7,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 3,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 5,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 1.8099,
+      "sell_nav": 1.7928,
+      "actual_return": -0.94,
+      "annualized_return": -343.1,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "163407",
+    "fund_name": "兴全沪深300增强",
+    "quant_score": 5.5,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 5,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 8,
+      "sharpe": 2,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 2.6458,
+      "sell_nav": 2.6146,
+      "actual_return": -1.18,
+      "annualized_return": -430.7,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "160644",
+    "fund_name": "| 6.95 | RSI 68距超买红线仅2点，波动率28%",
+    "quant_score": 6.2,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 5,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 5,
+      "sharpe": 10,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-09",
+      "buy_nav": 2.0326,
+      "sell_nav": 2.0326,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "501311",
+    "fund_name": "| 6.65 | 量化末位+规模仅5亿流动性陷阱+多头自评\"",
+    "quant_score": 4.8,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 5,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 5,
+      "sharpe": 2,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 0.924,
+      "sell_nav": 0.9182,
+      "actual_return": -0.63,
+      "annualized_return": -229.95,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "240022",
+    "fund_name": "| 6.65 | 量化末位+波动率28%周期赌性+多头自评仅",
+    "quant_score": 3.0,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 5,
+      "sharpe": 2,
+      "drawdown": 2
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-11",
+      "buy_nav": 5.324,
+      "sell_nav": 5.36,
+      "actual_return": 0.68,
+      "annualized_return": 124.1,
+      "holding_days": 2,
+      "holding": true,
+      "profitable": true
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "012414",
+    "fund_name": "| 永赢智能领先混合A | 7.25 | 量化最高+RSI最",
+    "quant_score": 3.3,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 2,
+      "drawdown": 2
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 0.5368,
+      "sell_nav": 0.5428,
+      "actual_return": 1.12,
+      "annualized_return": 408.8,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": true
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "519772",
+    "fund_name": "| 交银新生活力灵活配置混合 | 7.05 | 夏普最优+走",
+    "quant_score": 3.5,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 5,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 2,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-11",
+      "buy_nav": 2.2567,
+      "sell_nav": 2.2218,
+      "actual_return": -1.55,
+      "annualized_return": -282.88,
+      "holding_days": 2,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "009897",
+    "fund_name": "| 广发港股通成长精选股票A | 6.95 | 四线开花+经",
+    "quant_score": 3.3,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 7,
+      "macd": 3,
+      "volatility": 5,
+      "sharpe": 2,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 0.6609,
+      "sell_nav": 0.6539,
+      "actual_return": -1.06,
+      "annualized_return": -386.9,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "270050",
+    "fund_name": "| 广发新经济混合A | 6.95 | 低位翻多+低波动20",
+    "quant_score": 3.2,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 0,
+      "rsi": 5,
+      "macd": 3,
+      "volatility": 7,
+      "sharpe": 2,
+      "drawdown": 5
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-10",
+      "buy_nav": 2.4173,
+      "sell_nav": 2.3527,
+      "actual_return": -2.67,
+      "annualized_return": -974.55,
+      "holding_days": 1,
+      "holding": true,
+      "profitable": false
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "fund_code": "006751",
+    "fund_name": "| 富国互联科技股票A | 6.75 | 主升浪中期+筹码锁",
+    "quant_score": 6.0,
+    "reason": "Agent v2 全流程推荐 (Layer 1→L1.5→L2→L3→L4)",
+    "target_return": 10.0,
+    "stop_loss": -8.0,
+    "layer_passed": "L1→L1.5→L2→L3→L4",
+    "score_detail": {
+      "trend": 5,
+      "rsi": 10,
+      "macd": 3,
+      "volatility": 2,
+      "sharpe": 10,
+      "drawdown": 8
+    },
+    "outcome": {
+      "buy_date": "2026-06-09",
+      "sell_date": "2026-06-09",
+      "buy_nav": 6.9072,
+      "sell_nav": 6.9072,
+      "actual_return": 0.0,
+      "annualized_return": 0,
+      "holding_days": 0,
+      "holding": true,
+      "profitable": false
+    }
+  }
+]

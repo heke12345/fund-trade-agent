@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fund Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:rgba(255,255,255,.025);--surface2:rgba(255,255,255,.045);
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);
+  --text:#e8eaed;--text2:#8b8fa3;--muted:#5a5e72;
+  --blue:#6366f1;--blue-d:rgba(99,102,241,.08);
+  --green:#34d399;--green-d:rgba(52,211,153,.08);
+  --red:#f87171;--red-d:rgba(248,113,113,.08);
+  --purple:#a78bfa;--purple-d:rgba(167,139,250,.08);
+  --amber:#fbbf24;--amber-d:rgba(251,191,36,.08);
+  --cyan:#22d3ee;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;overflow:hidden;height:100vh}
+
+/* Ambient glow — 极微弱 */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.ambient-orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.06}
+.ambient-orb:nth-child(1){width:600px;height:600px;background:#6366f1;top:-15%;left:-10%}
+.ambient-orb:nth-child(2){width:500px;height:500px;background:#a78bfa;bottom:-10%;right:-10%}
+
+/* Header */
+.header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:48px;border-bottom:1px solid var(--border);background:rgba(10,10,15,.8);backdrop-filter:blur(20px)}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.4px}
+.logo-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--blue);margin-right:6px;vertical-align:middle}
+.header-sep{width:1px;height:16px;background:var(--border2)}
+.header-label{font-size:11px;color:var(--muted);font-weight:500}
+.header-right{display:flex;align-items:center;gap:8px}
+.timer{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:40px;display:none}
+.timer.on{display:block;color:var(--text2)}
+.input{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;font-family:inherit;outline:none;width:180px;transition:border-color .2s}
+.input:focus{border-color:rgba(99,102,241,.4)}
+.input::placeholder{color:var(--muted)}
+.chk{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--blue);width:12px;height:12px}
+.btn{padding:5px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit;transition:all .15s}
+.btn-p{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-p:hover{opacity:.85}
+.btn-p:disabled{opacity:.3;cursor:not-allowed}
+.btn-s{background:transparent;color:var(--text2);border-color:var(--border2)}
+.btn-s:hover{background:var(--surface);color:var(--text)}
+
+/* Main — 不再使用，改用 .tab-panel */
+
+/* Pipeline */
+.pipeline{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.pipe-step{flex:1;padding:6px 0;text-align:center;font-size:10px;font-weight:600;color:var(--muted);background:var(--surface);border-radius:6px;transition:all .5s ease;letter-spacing:.3px}
+.pipe-step.active{color:var(--blue);background:var(--blue-d)}
+.pipe-step.done{color:var(--green);background:var(--green-d)}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1;min-height:0}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;position:relative;transition:border-color .4s ease,background .4s ease;min-height:110px}
+.card.running{border-color:rgba(99,102,241,.2);background:rgba(99,102,241,.03)}
+.card.done{border-color:rgba(52,211,153,.15)}
+.card.vetoed{border-color:rgba(248,113,113,.2);background:rgba(248,113,113,.02)}
+.card.wide{grid-column:span 2}
+.card.full{grid-column:1/-1}
+
+.card-top{display:flex;align-items:center;gap:8px}
+.card-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .4s}
+.card-dot.idle{background:var(--muted);opacity:.3}
+.card-dot.running{background:var(--blue);box-shadow:0 0 8px rgba(99,102,241,.4);animation:dot-breathe 2s ease-in-out infinite}
+@keyframes dot-breathe{0%,100%{opacity:.6;box-shadow:0 0 6px rgba(99,102,241,.3)}50%{opacity:1;box-shadow:0 0 12px rgba(99,102,241,.5)}}
+.card-dot.done{background:var(--green)}
+.card-dot.vetoed{background:var(--red);box-shadow:0 0 6px rgba(248,113,113,.3)}
+.card-name{font-size:11px;font-weight:600;color:var(--text);flex:1}
+.card-layer{font-size:9px;color:var(--muted);font-weight:500}
+.card-time{font-size:9px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* 上游来源 */
+.card-from{font-size:9px;color:var(--muted);opacity:0;transition:opacity .6s;height:14px;overflow:hidden}
+.card-from.show{opacity:1}
+
+/* 等待 */
+.card-wait{font-size:9px;color:var(--blue);opacity:.5;display:none}
+.card-wait.show{display:block}
+
+.card-out{font-size:10px;color:var(--text2);line-height:1.55;flex:1;overflow:auto;white-space:pre-wrap;word-break:break-all;max-height:80px}
+.card-out:empty::after{content:'—';color:var(--muted);opacity:.3}
+
+/* Debate */
+.debate{grid-column:1/-1;display:grid;grid-template-columns:1fr 1px 1fr;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;min-height:130px}
+.debate-col{padding:12px;display:flex;flex-direction:column;gap:6px;position:relative}
+.debate-sep{background:var(--border);align-self:stretch}
+.debate-head{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600}
+.debate-head .dot{width:6px;height:6px;border-radius:50%}
+.debate-head .dot.bull{background:var(--green)}
+.debate-head .dot.bear{background:var(--red)}
+.debate-body{font-size:10px;color:var(--text2);line-height:1.5;white-space:pre-wrap;flex:1;overflow:auto;max-height:100px}
+/* 发言方高亮条 — 仅左/右边缘3px色条 */
+.debate-col.speaking-bull{box-shadow:inset 3px 0 0 var(--green)}
+.debate-col.speaking-bear{box-shadow:inset -3px 0 0 var(--red)}
+
+/* SVG 连线 */
+.flow-svg{position:fixed;inset:0;pointer-events:none;z-index:4}
+.conn{fill:none;stroke:var(--border);stroke-width:1;transition:stroke .8s ease,opacity .8s ease}
+.conn.lit{stroke:rgba(99,102,241,.2);stroke-width:1.5}
+.conn.pulse{stroke:rgba(99,102,241,.35);stroke-width:2}
+
+/* Console */
+.console{grid-column:1/-1;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:8px;padding:10px;max-height:100px;overflow:auto;font-family:'SF Mono','Menlo',monospace;font-size:10px;color:var(--muted);line-height:1.6}
+.c-l{margin-bottom:1px}
+.c-l .t{opacity:.4;margin-right:8px}
+.c-l.ok{color:var(--green)}
+.c-l.err{color:var(--red)}
+.c-l.hi{color:var(--blue)}
+
+/* Result */
+.result-zone{grid-column:1/-1;display:none}
+.result-zone.show{display:block}
+.result-box{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:16px 20px;position:relative}
+.result-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0}
+.result-box.buy::before{background:var(--green)}
+.result-box.hold::before{background:var(--amber)}
+.result-box.avoid::before{background:var(--red)}
+.result-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.result-action{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.3px}
+.result-action.buy{color:var(--green);background:var(--green-d)}
+.result-action.hold{color:var(--amber);background:var(--amber-d)}
+.result-action.avoid{color:var(--red);background:var(--red-d)}
+.result-name{font-size:16px;font-weight:700;color:var(--text)}
+.result-code{font-size:11px;color:var(--muted);font-family:'SF Mono',monospace}
+.result-body{font-size:11px;color:var(--text2);line-height:1.7;background:var(--surface);border-radius:8px;padding:12px}
+
+/* ===== Tab 导航 ===== */
+.tab-bar{position:relative;z-index:10;display:flex;align-items:center;gap:0;padding:0 24px;height:36px;border-bottom:1px solid var(--border);background:rgba(10,10,15,.6);backdrop-filter:blur(12px)}
+.tab{padding:8px 16px;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--text);border-bottom-color:var(--blue)}
+.tab-panel{display:none;position:relative;z-index:5;height:calc(100vh - 84px);overflow-y:auto;padding:16px 20px}
+.tab-panel.active{display:flex;flex-direction:column;gap:12px}
+
+/* ===== 通用面板样式 ===== */
+.panel-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.panel-desc{font-size:11px;color:var(--muted);margin-bottom:12px}
+.data-table{width:100%;border-collapse:collapse;font-size:11px}
+.data-table th{text-align:left;padding:8px 10px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.data-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.data-table tr:hover td{background:var(--surface)}
+.data-table .num{font-variant-numeric:tabular-nums;text-align:right}
+.data-table .pos{color:var(--red)}
+.data-table .neg{color:var(--green)}
+.tag{display:inline-block;font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px}
+.tag.pass{color:var(--green);background:var(--green-d)}
+.tag.fail{color:var(--red);background:var(--red-d)}
+.tag.up{color:var(--red);background:var(--red-d)}
+.tag.down{color:var(--green);background:var(--green-d)}
+.tag.neutral{color:var(--muted);background:var(--surface2)}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.detail-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px}
+.detail-item .dl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.detail-item .dv{font-size:14px;font-weight:600;color:var(--text)}
+.report-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .2s}
+.report-item:hover{border-color:var(--border2);background:var(--surface2)}
+.report-item .ri-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.report-item .ri-meta{font-size:10px;color:var(--muted)}
+.report-item .ri-preview{font-size:10px;color:var(--text2);margin-top:6px;line-height:1.5;max-height:40px;overflow:hidden}
+.report-detail{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:11px;color:var(--text2);line-height:1.7;white-space:pre-wrap;max-height:calc(100vh - 180px);overflow:auto}
+.fb-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px}
+.fb-row:last-child{border-bottom:none}
+.weight-bar{height:4px;border-radius:2px;background:var(--surface2);flex:1;position:relative;overflow:hidden}
+.weight-bar-fill{height:100%;border-radius:2px;background:var(--blue);transition:width .5s}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:11px}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="ambient"><div class="ambient-orb"></div><div class="ambient-orb"></div></div>
+<svg class="flow-svg" id="flowSvg"><defs><filter id="g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>
+
+<div class="header">
+  <div class="header-left">
+    <span class="logo"><span class="logo-dot"></span>Fund Agent</span>
+    <div class="header-sep"></div>
+    <span class="header-label">投研分析</span>
+  </div>
+  <div class="header-right">
+    <span class="timer" id="timer"></span>
+    <label class="chk"><input type="checkbox" id="fast"> 快速模式</label>
+    <input class="input" id="fundInput" placeholder="基金代码，如 000051">
+    <button class="btn btn-p" id="startBtn" onclick="go()">分析</button>
+    <button class="btn btn-s" onclick="demo()">演示</button>
+  </div>
+</div>
+
+<!-- Tab 导航 -->
+<div class="tab-bar">
+  <div class="tab active" data-tab="agent" onclick="switchTab('agent')">Agent 分析</div>
+  <div class="tab" data-tab="screen" onclick="switchTab('screen')">快速筛选</div>
+  <div class="tab" data-tab="analyze" onclick="switchTab('analyze')">单只分析</div>
+  <div class="tab" data-tab="reports" onclick="switchTab('reports')">历史报告</div>
+  <div class="tab" data-tab="feedback" onclick="switchTab('feedback')">反馈优化</div>
+</div>
+
+<!-- Tab 1: Agent 分析 -->
+<div class="tab-panel active" id="panel-agent">
+  <div class="pipeline" id="pipeline">
+    <div class="pipe-step" data-l="1">筛选</div>
+    <div class="pipe-step" data-l="1.5">否决</div>
+    <div class="pipe-step" data-l="2">分析</div>
+    <div class="pipe-step" data-l="3">辩论</div>
+    <div class="pipe-step" data-l="4">决策</div>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- Tab 2: 快速筛选 -->
+<div class="tab-panel" id="panel-screen">
+  <div>
+    <span class="panel-title">基金快速筛选</span>
+    <span class="panel-desc" style="margin-left:12px">基于量化评分 + 硬约束规则，从全市场筛选 Top 基金（不消耗 LLM 额度）</span>
+    <button class="btn btn-p" style="margin-left:12px" onclick="loadScreen()">开始筛选</button>
+  </div>
+  <div id="screenResult"><div class="loading">点击「开始筛选」获取结果</div></div>
+</div>
+
+<!-- Tab 3: 单只分析 -->
+<div class="tab-panel" id="panel-analyze">
+  <div style="display:flex;align-items:center;gap:8px">
+    <span class="panel-title">单只基金分析</span>
+    <input class="input" id="analyzeInput" placeholder="输入基金代码，如 000051" style="width:200px">
+    <button class="btn btn-p" onclick="loadAnalyze()">分析</button>
+  </div>
+  <div id="analyzeResult"><div class="loading">输入基金代码后点击分析</div></div>
+</div>
+
+<!-- Tab 4: 历史报告 -->
+<div class="tab-panel" id="panel-reports">
+  <span class="panel-title">历史分析报告</span>
+  <div id="reportsList"><div class="loading">加载中...</div></div>
+  <div id="reportDetail" style="display:none"></div>
+</div>
+
+<!-- Tab 5: 反馈优化 -->
+<div class="tab-panel" id="panel-feedback">
+  <span class="panel-title">反馈追踪与权重优化</span>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="btn btn-p" onclick="loadFeedback()">刷新日志</button>
+    <button class="btn btn-s" onclick="triggerTrack()">执行追踪</button>
+    <button class="btn btn-s" onclick="loadPerformance()">绩效概览</button>
+  </div>
+  <div id="feedbackResult"><div class="loading">点击刷新加载反馈日志</div></div>
+</div>
+
+<script>
+const L=[
+  {id:1,n:'筛选层',c:'blue',a:[{id:'fund_screener',n:'基金筛选'},{id:'macro_analyst',n:'宏观分析'}]},
+  {id:1.5,n:'否决层',c:'red',a:[{id:'constraint_veto',n:'硬约束否决'}]},
+  {id:2,n:'分析层',c:'green',a:[{id:'technical_analyst',n:'技术分析'},{id:'fundamental_analyst',n:'基本面分析'},{id:'sentiment_analyst',n:'情绪分析'}]},
+  {id:3,n:'辩论层',c:'purple',a:[{id:'bullish_researcher',n:'多头研究员'},{id:'bearish_researcher',n:'空头研究员'},{id:'debate_judge',n:'辩论裁决'}]},
+  {id:4,n:'决策层',c:'amber',a:[{id:'risk_controller',n:'风险控制'},{id:'portfolio_manager',n:'投资组合'}]},
+];
+const A=L.flatMap(l=>l.a.map(a=>({...a,layer:l.id,ln:l.n,lc:l.c})));
+const S={};A.forEach(a=>S[a.id]={s:'idle',out:'',st:null,layer:a.layer});
+const N={};A.forEach(a=>N[a.id]=a.n);
+
+const F={
+  fund_screener:['constraint_veto','technical_analyst','fundamental_analyst','bullish_researcher','bearish_researcher'],
+  macro_analyst:['constraint_veto','sentiment_analyst','bullish_researcher','bearish_researcher'],
+  constraint_veto:['technical_analyst','fundamental_analyst','sentiment_analyst'],
+  technical_analyst:['bullish_researcher','bearish_researcher'],
+  fundamental_analyst:['bullish_researcher','bearish_researcher'],
+  sentiment_analyst:['bullish_researcher','bearish_researcher','debate_judge'],
+  bullish_researcher:['debate_judge'],bearish_researcher:['debate_judge'],
+  debate_judge:['risk_controller'],risk_controller:['portfolio_manager'],
+};
+// 反向依赖
+const D={};A.forEach(a=>D[a.id]=[]);
+Object.entries(F).forEach(([f,ts])=>ts.forEach(t=>{if(D[t])D[t].push(f);}));
+
+let run=false,t0=null,sse=null,hbc=0,lines=[];
+
+// ============ 渲染 ============
+function render(){
+  const g=document.getElementById('grid');
+  let h='';
+  h+=card('fund_screener');h+=card('macro_analyst');
+  h+=card('constraint_veto','wide');
+  h+=card('technical_analyst');h+=card('fundamental_analyst');h+=card('sentiment_analyst');
+  // 辩论
+  h+=`<div class="debate" id="debate">
+    <div class="debate-col" id="dcBull"><div class="debate-head"><span class="dot bull"></span>多头论点</div><div class="debate-body" id="db-bull">—</div></div>
+    <div class="debate-sep"></div>
+    <div class="debate-col" id="dcBear"><div class="debate-head"><span class="dot bear"></span>空头论点</div><div class="debate-body" id="db-bear">—</div></div>
+  </div>`;
+  h+=card('debate_judge','wide');
+  h+=card('risk_controller');h+=card('portfolio_manager');
+  h+=`<div class="result-zone" id="rz"></div>`;
+  h+=`<div class="console" id="con"></div>`;
+  g.innerHTML=h;
+  setTimeout(drawLines,150);
+}
+
+function card(id,ex=''){
+  const a=A.find(x=>x.id===id),s=S[id];
+  const deps=D[id]||[];
+  const waiting=deps.filter(d=>S[d]?.s!=='done'&&S[d]?.s!=='vetoed').map(d=>N[d]);
+  const wt=waiting.length?`等待 ${waiting.slice(0,2).join('、')}` :'';
+  return `<div class="card ${s.s} ${ex}" id="c-${id}">
+    <div class="card-top">
+      <div class="card-dot ${s.s}" id="dot-${id}"></div>
+      <span class="card-name">${a.n}</span>
+      <span class="card-layer">${a.ln}</span>
+      <span class="card-time" id="ct-${id}"></span>
+    </div>
+    <div class="card-from" id="cf-${id}"></div>
+    <div class="card-wait ${wt?'show':''}" id="cw-${id}">${wt}</div>
+    <div class="card-out" id="co-${id}">${s.out||''}</div>
+  </div>`;
+}
+
+// ============ 连线 ============
+function drawLines(){
+  const svg=document.getElementById('flowSvg');
+  lines.forEach(l=>l.remove());lines=[];
+  Object.entries(F).forEach(([from,tos])=>{
+    const fc=document.getElementById('c-'+from);if(!fc)return;
+    tos.forEach(to=>{
+      const tc=document.getElementById('c-'+to);if(!tc)return;
+      const fr=fc.getBoundingClientRect(),tr=tc.getBoundingClientRect();
+      const x1=fr.left+fr.width/2,y1=fr.bottom,x2=tr.left+tr.width/2,y2=tr.top;
+      const my=(y1+y2)/2;
+      const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('d',`M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`);
+      p.setAttribute('class','conn');p.dataset.from=from;p.dataset.to=to;
+      svg.appendChild(p);lines.push(p);
+    });
+  });
+}
+
+// 连线亮起 — 优雅过渡
+function lightLines(fromId){
+  lines.forEach(l=>{
+    if(l.dataset.from===fromId){
+      l.classList.add('lit');
+      // 短暂加亮后回退
+      setTimeout(()=>{l.classList.add('pulse');},100);
+      setTimeout(()=>{l.classList.remove('pulse');},1200);
+    }
+  });
+}
+
+// ============ 更新 ============
+function upd(id){
+  const s=S[id],c=document.getElementById('c-'+id);if(!c)return;
+  c.className=c.className.replace(/\b(idle|running|done|vetoed|wide|full)\b/g,'').trim();
+  const a=A.find(x=>x.id===id);
+  const extra=id==='constraint_veto'||id==='debate_judge'?'wide':'';
+  c.className=`card ${s.s} ${extra}`.trim();
+
+  const dot=document.getElementById('dot-'+id);if(dot)dot.className='card-dot '+s.s;
+
+  // 等待提示
+  const wEl=document.getElementById('cw-'+id);
+  if(wEl){
+    if(s.s==='running'){
+      const deps=D[id]||[];
+      const w=deps.filter(d=>S[d]?.s!=='done'&&S[d]?.s!=='vetoed').map(d=>N[d]);
+      wEl.textContent=w.length?`等待 ${w.slice(0,2).join('、')}`:'处理中';
+      wEl.classList.add('show');
+    } else {
+      wEl.classList.remove('show');
+    }
+  }
+
+  if(s.out&&(s.s==='done'||s.s==='vetoed')) typeOut(id,s.out);
+  updPipe(s.layer||layerOf(id));
+}
+
+function layerOf(id){for(const l of L)for(const a of l.a)if(a.id===id)return l.id;return 0;}
+function updPipe(lid){
+  document.querySelectorAll('.pipe-step').forEach(el=>{
+    const sl=parseFloat(el.dataset.l);
+    el.className='pipe-step'+(sl<lid?' done':sl===lid?' active':'');
+  });
+  // 微妙环境光变化
+  const orbs=document.querySelectorAll('.ambient-orb');
+  const colors={1:['#6366f1','#818cf8'],1.5:['#f87171','#fca5a5'],2:['#34d399','#6ee7b7'],3:['#a78bfa','#c4b5fd'],4:['#fbbf24','#fde68a']};
+  const c=colors[lid]||colors[1];
+  if(orbs[0])gsap.to(orbs[0],{background:c[0],duration:2,ease:'sine.inOut'});
+  if(orbs[1])gsap.to(orbs[1],{background:c[1],duration:2,ease:'sine.inOut'});
+}
+
+// ============ 数据流 ============
+function flow(fromId){
+  const targets=F[fromId]||[];
+  lightLines(fromId);
+  targets.forEach((toId,i)=>{
+    setTimeout(()=>{
+      // 来源标签
+      const cf=document.getElementById('cf-'+toId);
+      if(cf){
+        cf.textContent=`← ${N[fromId]}`;
+        cf.classList.add('show');
+        gsap.fromTo(cf,{opacity:0},{opacity:1,duration:0.6,ease:'sine.out'});
+        gsap.to(cf,{opacity:0,delay:3,duration:1});
+      }
+      // 目标卡片微弱发光
+      const tc=document.getElementById('c-'+toId);
+      if(tc){
+        gsap.fromTo(tc,{borderColor:'rgba(99,102,241,.25)'},{borderColor:getComputedStyle(tc).borderColor,duration:1.2,ease:'sine.out'});
+      }
+    },i*100);
+  });
+}
+
+// ============ 辩论 ============
+function speak(side){
+  const bull=document.getElementById('dcBull'),bear=document.getElementById('dcBear');
+  if(bull)bull.classList.remove('speaking-bull');
+  if(bear)bear.classList.remove('speaking-bear');
+  if(side==='bull'&&bull){
+    bull.classList.add('speaking-bull');
+    gsap.fromTo(bull,{x:0},{x:3,duration:0.15,ease:'sine.out',yoyo:true,repeat:1,onComplete:()=>gsap.set(bull,{x:0})});
+  }else if(side==='bear'&&bear){
+    bear.classList.add('speaking-bear');
+    gsap.fromTo(bear,{x:0},{x:-3,duration:0.15,ease:'sine.out',yoyo:true,repeat:1,onComplete:()=>gsap.set(bear,{x:0})});
+  }else if(side==='judge'){
+    const jc=document.getElementById('c-debate_judge');
+    if(jc)gsap.fromTo(jc,{borderColor:'rgba(167,139,250,.3)'},{borderColor:'rgba(167,139,250,.1)',duration:1.5,ease:'sine.out'});
+  }
+}
+
+// ============ 否决 ============
+function vetoEffect(id){
+  const c=document.getElementById('c-'+id);if(!c)return;
+  const old=c.querySelector('.veto-stamp');if(old)old.remove();
+  const s=document.createElement('div');
+  s.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;opacity:0;pointer-events:none;text-transform:uppercase';
+  s.textContent='VETOED';
+  c.appendChild(s);
+  gsap.to(s,{opacity:0.6,duration:0.6,ease:'sine.out'});
+  gsap.to(s,{opacity:0.2,delay:2,duration:1});
+}
+
+// ============ 打字机 ============
+function typeOut(id,text){
+  const el=document.getElementById('co-'+id);if(!el||!text)return;
+  el.textContent='';let i=0;const ch=text.substring(0,300);
+  const sp=Math.max(5,Math.min(20,2000/ch.length));
+  (function t(){if(i<ch.length){el.textContent+=ch[i];i++;setTimeout(t,sp);}}());
+}
+
+// ============ Console / Timer ============
+function log(m,t=''){const z=document.getElementById('con');if(!z)return;const ts=new Date().toLocaleTimeString('zh-CN',{hour12:false});z.innerHTML+=`<div class="c-l ${t}"><span class="t">${ts}</span>${m}</div>`;z.scrollTop=z.scrollHeight;}
+
+let ti=null;
+function startT(){t0=Date.now();const el=document.getElementById('timer');el.classList.add('on');ti=setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000);const m=Math.floor(s/60);el.textContent=m>0?`${m}:${String(s%60).padStart(2,'0')}`:`${s}s`;A.forEach(a=>{const st=S[a.id];if(st.s==='running'&&st.st){const ae=Math.floor((Date.now()-st.st)/1000);const te=document.getElementById('ct-'+a.id);if(te)te.textContent=ae+'s';}});},1000);}
+function stopT(){clearInterval(ti);document.getElementById('timer').classList.remove('on');}
+
+// ============ SSE ============
+function connectSSE(){if(sse)sse.close();sse=new EventSource('/api/agent/events/stream');sse.onmessage=e=>{try{handle(JSON.parse(e.data));}catch(e){}};sse.onerror=()=>setTimeout(connectSSE,3000);}
+
+function handle(d){
+  const {type,agent_id,agent_name,layer,message,output_preview}=d;
+  if(type==='system_start'){log(message,'hi');}
+  else if(type==='agent_start'){if(S[agent_id]){S[agent_id].s='running';S[agent_id].st=Date.now();upd(agent_id);}log(`${agent_name} started`,'hi');}
+  else if(type==='agent_done'){if(S[agent_id]){S[agent_id].s='done';S[agent_id].out=(output_preview||message||'').substring(0,500);upd(agent_id);flow(agent_id);}log(`${agent_name} done`,'ok');}
+  else if(type==='veto'){if(S[agent_id]){S[agent_id].s='vetoed';S[agent_id].out=output_preview||message||'';upd(agent_id);vetoEffect(agent_id);}log(`${agent_name}: ${message}`,'err');}
+  else if(type==='debate_bull'){const el=document.getElementById('db-bull');if(el){el.textContent=message||output_preview||'';}speak('bull');log('Bull argued','hi');}
+  else if(type==='debate_bear'){const el=document.getElementById('db-bear');if(el){el.textContent=message||output_preview||'';}speak('bear');log('Bear argued','hi');}
+  else if(type==='judge'){const el=document.getElementById('co-debate_judge');if(el)el.textContent=message||output_preview||'';speak('judge');log('Judge ruled','hi');}
+  else if(type==='recommendation'){showRes(output_preview||message);}
+  else if(type==='heartbeat'){hbc++;if(hbc%5===0)log(message);}
+  else if(type==='complete'){log('Analysis complete','ok');stopT();run=false;document.getElementById('startBtn').disabled=false;if(output_preview)showRes(output_preview);}
+  else if(type==='error'){log(message,'err');stopT();run=false;document.getElementById('startBtn').disabled=false;}
+  else if(type==='progress'||type==='data_flow_out'||type==='layer_start'){log(message);}
+}
+
+// ============ Result ============
+function showRes(text){if(!text)return;const z=document.getElementById('rz');if(!z)return;
+  let fn='',fc='',sc='',act='hold';
+  const nm=text.match(/(?:基金|推荐)[：:]\s*([^\(（\d]{2,20})[\(（]?(\d{6})/);if(nm){fn=nm[1].trim();fc=nm[2];}
+  const sm=text.match(/综合评分[：:]\s*(\d+\.?\d*)/);if(sm)sc=sm[1];
+  const am=text.match(/(?:建议|操作)[：:]\s*(买入|持有|卖出|观望|回避)/);if(am)act={买入:'buy',持有:'hold',卖出:'avoid',观望:'hold',回避:'avoid'}[am[1]]||'hold';
+  z.innerHTML=`<div class="result-box ${act}"><div class="result-top"><span class="result-action ${act}">${{buy:'买入',hold:'持有',avoid:'回避'}[act]}</span><span class="result-name">${fn||'投资建议'}</span><span class="result-code">${fc}</span></div>${sc?`<div style="font-size:12px;color:var(--text2);margin-bottom:8px">评分 <strong style="color:var(--text);font-size:14px">${sc}</strong></div>`:''}<div class="result-body">${text.substring(0,800)}</div></div>`;
+  z.classList.add('show');
+  const rb=z.querySelector('.result-box');if(rb)gsap.fromTo(rb,{opacity:0,y:12},{opacity:1,y:0,duration:0.5,ease:'sine.out'});
+}
+
+// ============ Actions ============
+async function go(){if(run)return;run=true;hbc=0;document.getElementById('startBtn').disabled=true;
+  A.forEach(a=>S[a.id]={s:'idle',out:'',st:null,layer:a.layer});
+  document.getElementById('rz').classList.remove('show');document.getElementById('rz').innerHTML='';
+  document.querySelectorAll('.pipe-step').forEach(el=>el.className='pipe-step');
+  document.getElementById('con').innerHTML='';render();
+  const fc=document.getElementById('fundInput').value.trim();const fm=document.getElementById('fast').checked;
+  startT();connectSSE();
+  try{const r=await fetch('/api/agent/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fund_codes:fc||null,fast_mode:fm})});const d=await r.json();if(!d.ok){log('Failed: '+(d.error||''),'err');stopT();run=false;document.getElementById('startBtn').disabled=false;}}
+  catch(e){log('Error: '+e.message,'err');stopT();run=false;document.getElementById('startBtn').disabled=false;}
+}
+
+function demo(){if(run)return;run=true;document.getElementById('startBtn').disabled=true;
+  A.forEach(a=>S[a.id]={s:'idle',out:'',st:null,layer:a.layer});
+  document.getElementById('rz').classList.remove('show');document.getElementById('rz').innerHTML='';
+  document.querySelectorAll('.pipe-step').forEach(el=>el.className='pipe-step');
+  document.getElementById('con').innerHTML='';render();startT();
+
+  const seq=[
+    {d:400,a:'fund_screener',o:'筛选完成 — Top 5 基金\n000051 华夏沪深300 +3.2%\n000071 华夏恒生ETF +2.8%\n012414 永赢智能 +4.1%'},
+    {d:2200,a:'macro_analyst',o:'宏观：美联储维持利率不变\nA股流动性偏宽松\n科技板块受政策支持'},
+    {d:4000,a:'constraint_veto',o:'000051 通过\n012414 通过\n161725 白酒 RSI=75.3 否决',v:true},
+    {d:6200,a:'technical_analyst',o:'000051 技术面\nMA5>MA20 多头排列\nRSI 58.3 中性偏多\nMACD 金叉'},
+    {d:7800,a:'fundamental_analyst',o:'沪深300 PE 12.3x\n近5年38%分位\n盈利增速 Q1 +5.2%'},
+    {d:9400,a:'sentiment_analyst',o:'北向资金连续3日净流入\n融资余额小幅上升\n市场情绪：中性偏乐观'},
+    {d:11500,b:'bull',t:'Round 1\n1. MA多头排列+MACD金叉，趋势向上\n2. PE 38%分位，估值合理\n3. 北向资金持续流入，增量资金'},
+    {d:13500,b:'bear',t:'Round 1\n1. RSI接近超买区间\n2. 成交量未明显放大，动能不足\n3. 外围不确定性仍存'},
+    {d:15500,b:'bull',t:'Round 2\n成交量边际改善\nRSI 58.3距超买仍有空间\n政策利好预期升温'},
+    {d:17500,b:'bear',t:'Round 2\n边际改善不等于趋势确认\n板块轮动加快，持续性存疑\n需警惕Q2盈利下修风险'},
+    {d:19500,b:'judge',t:'裁决：多头优势微弱\n趋势指标偏多但量能不足\n建议轻仓参与，设止损\n综合评分 6.8'},
+    {d:21500,a:'risk_controller',o:'风控建议\n单只仓位 ≤15%\n止损线 -5%\n总仓位 ≤65%'},
+    {d:23000,a:'portfolio_manager',o:'最终推荐\n华夏沪深300ETF联接(000051)\n评分 7.25 | 建议买入\n仓位 15% | 止损 -5%'},
+    {d:24500,r:true,t:'推荐基金：华夏沪深300ETF联接(000051)\n综合评分：7.25\n建议：买入\n仓位：15% | 止损线：-5%\n\n理由：技术面多头排列，基本面估值合理，流动性支撑，但量能不足需控制仓位'},
+  ];
+
+  seq.forEach(item=>{
+    setTimeout(()=>{
+      if(item.a){
+        S[item.a].s='running';S[item.a].st=Date.now();upd(item.a);log(`${N[item.a]} started`,'hi');
+        setTimeout(()=>{
+          S[item.a].s=item.v?'vetoed':'done';S[item.a].out=item.o;upd(item.a);flow(item.a);
+          if(item.v)vetoEffect(item.a);
+          log(`${N[item.a]} ${item.v?'vetoed':'done'}`,item.v?'err':'ok');
+        },1200);
+      }else if(item.b){
+        const el=document.getElementById('db-'+item.b);
+        if(item.b==='judge'){const el2=document.getElementById('co-debate_judge');if(el2)el2.textContent=item.t;}
+        else if(el)el.textContent=item.t;
+        speak(item.b);log(`${item.b==='bull'?'Bull':item.b==='bear'?'Bear':'Judge'} spoke`,'hi');
+      }else if(item.r){
+        showRes(item.t);log('Analysis complete','ok');stopT();run=false;
+        document.getElementById('startBtn').disabled=false;
+        document.querySelectorAll('.pipe-step').forEach(el=>el.className='pipe-step done');
+      }
+    },item.d);
+  });
+}
+
+// ============ Tab 切换 ============
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
+  if(name==='agent') setTimeout(drawLines,150);
+  if(name==='reports') loadReports();
+}
+
+// ============ 快速筛选 ============
+async function loadScreen(){
+  const el=document.getElementById('screenResult');
+  el.innerHTML='<div class="loading">筛选中，约需 10-30 秒...</div>';
+  try{
+    const r=await fetch('/api/screen',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({top_n:10})});
+    const d=await r.json();
+    if(!d.ok){el.innerHTML=`<div class="loading" style="color:var(--red)">错误: ${d.error}</div>`;return;}
+    const {passed,vetoed}=d.data;
+    let h='<div class="panel-desc">通过硬约束且评分 ≥ 6.5 的基金</div>';
+    if(passed.length){
+      h+='<table class="data-table"><thead><tr><th>代码</th><th>名称</th><th>类型</th><th class="num">近1月</th><th class="num">近3月</th><th class="num">RSI</th><th>趋势</th><th class="num">评分</th><th>约束</th></tr></thead><tbody>';
+      passed.forEach(f=>{
+        const r1=f.return_1m,r3=f.return_3m;
+        h+=`<tr>
+          <td style="font-family:monospace">${f.code}</td><td>${f.name}</td><td>${f.type||'—'}</td>
+          <td class="num ${r1>0?'pos':'neg'}">${r1>0?'+':''}${r1?.toFixed(1)||'—'}%</td>
+          <td class="num ${r3>0?'pos':'neg'}">${r3>0?'+':''}${r3?.toFixed(1)||'—'}%</td>
+          <td class="num">${f.rsi||'—'}</td>
+          <td><span class="tag ${f.trend==='up'?'up':f.trend==='down'?'down':'neutral'}">${f.trend||'—'}</span></td>
+          <td class="num" style="font-weight:600">${f.quant_score}</td>
+          <td><span class="tag pass">通过</span></td>
+        </tr>`;
+      });
+      h+='</tbody></table>';
+    } else { h+='<div class="loading">无基金通过筛选</div>'; }
+    if(vetoed.length){
+      h+='<div class="panel-desc" style="margin-top:16px">被否决的基金</div>';
+      h+='<table class="data-table"><thead><tr><th>代码</th><th>名称</th><th class="num">评分</th><th>否决原因</th></tr></thead><tbody>';
+      vetoed.forEach(f=>{
+        h+=`<tr><td style="font-family:monospace">${f.code}</td><td>${f.name}</td><td class="num">${f.quant_score||'—'}</td><td style="font-size:10px;color:var(--red)">${(f.constraints_reasons||[]).join('; ')||'—'}</td></tr>`;
+      });
+      h+='</tbody></table>';
+    }
+    el.innerHTML=h;
+  }catch(e){el.innerHTML=`<div class="loading" style="color:var(--red)">请求失败: ${e.message}</div>`;}
+}
+
+// ============ 单只分析 ============
+async function loadAnalyze(){
+  const code=document.getElementById('analyzeInput').value.trim();
+  if(!code){alert('请输入基金代码');return;}
+  const el=document.getElementById('analyzeResult');
+  el.innerHTML='<div class="loading">分析中...</div>';
+  try{
+    const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fund_code:code})});
+    const d=await r.json();
+    if(!d.ok){el.innerHTML=`<div class="loading" style="color:var(--red)">错误: ${d.error}</div>`;return;}
+    const f=d.data;
+    let h='';
+    // 基本信息
+    if(f.details){
+      h+=`<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">${f.details['基金简称']||f.code} <span style="font-family:monospace;color:var(--muted);font-size:11px">${f.code}</span></div>`;
+    }
+    // 指标网格
+    const ind=f.indicators||{};
+    h+='<div class="detail-grid">';
+    h+=`<div class="detail-item"><div class="dl">量化评分</div><div class="dv" style="color:${f.quant_score>=6.5?'var(--green)':'var(--red)'}">${f.quant_score}</div></div>`;
+    h+=`<div class="detail-item"><div class="dl">RSI(6)</div><div class="dv">${ind.rsi_6||'—'}</div></div>`;
+    h+=`<div class="detail-item"><div class="dl">趋势</div><div class="dv"><span class="tag ${ind.trend==='up'?'up':ind.trend==='down'?'down':'neutral'}">${ind.trend||'—'}</span></div></div>`;
+    h+=`<div class="detail-item"><div class="dl">MACD</div><div class="dv"><span class="tag ${ind.macd_signal==='golden_cross'?'pass':ind.macd_signal==='death_cross'?'fail':'neutral'}">${ind.macd_signal||'—'}</span></div></div>`;
+    h+=`<div class="detail-item"><div class="dl">波动率</div><div class="dv">${ind.volatility||'—'}%</div></div>`;
+    h+=`<div class="detail-item"><div class="dl">夏普比率</div><div class="dv">${ind.sharpe||'—'}</div></div>`;
+    h+=`<div class="detail-item"><div class="dl">最大回撤</div><div class="dv" style="color:var(--red)">${ind.max_drawdown||'—'}%</div></div>`;
+    h+=`<div class="detail-item"><div class="dl">当前净值</div><div class="dv">${ind.current_nav||'—'}</div></div>`;
+    h+=`<div class="detail-item"><div class="dl">硬约束</div><div class="dv"><span class="tag ${f.constraints?.pass?'pass':'fail'}">${f.constraints?.pass?'通过':'否决'}</span></div></div>`;
+    h+='</div>';
+    // 否决原因
+    if(f.constraints&&!f.constraints.pass&&f.constraints.reasons?.length){
+      h+=`<div style="font-size:10px;color:var(--red);margin-bottom:12px">否决原因: ${f.constraints.reasons.join('; ')}</div>`;
+    }
+    // 评分明细
+    if(f.score_detail&&Object.keys(f.score_detail).length){
+      h+='<div class="panel-desc">评分维度明细</div><table class="data-table"><thead><tr><th>维度</th><th class="num">分数</th></tr></thead><tbody>';
+      Object.entries(f.score_detail).forEach(([k,v])=>{
+        h+=`<tr><td>${k}</td><td class="num">${typeof v==='number'?v.toFixed(2):v}</td></tr>`;
+      });
+      h+='</tbody></table>';
+    }
+    // 近5日净值
+    if(f.recent_nav?.length){
+      h+='<div class="panel-desc" style="margin-top:12px">近期净值</div><table class="data-table"><thead><tr><th>日期</th><th class="num">净值</th><th class="num">涨跌</th></tr></thead><tbody>';
+      f.recent_nav.forEach(n=>{
+        h+=`<tr><td>${n.date}</td><td class="num">${n.nav}</td><td class="num ${n.change>0?'pos':'neg'}">${n.change>0?'+':''}${n.change?.toFixed(2)||'—'}%</td></tr>`;
+      });
+      h+='</tbody></table>';
+    }
+    // 持仓
+    if(f.holdings?.length){
+      h+='<div class="panel-desc" style="margin-top:12px">重仓持股</div><table class="data-table"><thead><tr><th>股票</th><th class="num">占比</th></tr></thead><tbody>';
+      f.holdings.slice(0,10).forEach(s=>{
+        const name=s['股票名称']||s.name||'—';
+        const pct=s['占净值比例']||s.ratio||'—';
+        h+=`<tr><td>${name}</td><td class="num">${pct}%</td></tr>`;
+      });
+      h+='</tbody></table>';
+    }
+    el.innerHTML=h;
+  }catch(e){el.innerHTML=`<div class="loading" style="color:var(--red)">请求失败: ${e.message}</div>`;}
+}
+
+// ============ 历史报告 ============
+async function loadReports(){
+  const list=document.getElementById('reportsList');
+  const detail=document.getElementById('reportDetail');
+  detail.style.display='none';
+  list.innerHTML='<div class="loading">加载中...</div>';
+  try{
+    const r=await fetch('/api/reports');const d=await r.json();
+    if(!d.ok||!d.data.length){list.innerHTML='<div class="loading">暂无报告</div>';return;}
+    let h='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">';
+    d.data.forEach(rp=>{
+      h+=`<div class="report-item" onclick="loadReport('${rp.filename}')">
+        <div class="ri-name">${rp.filename}</div>
+        <div class="ri-meta">${rp.modified} · ${(rp.size/1024).toFixed(1)}KB</div>
+        <div class="ri-preview">${rp.preview}</div>
+      </div>`;
+    });
+    h+='</div>';
+    list.innerHTML=h;
+  }catch(e){list.innerHTML=`<div class="loading" style="color:var(--red)">加载失败</div>`;}
+}
+
+async function loadReport(name){
+  const list=document.getElementById('reportsList');
+  const detail=document.getElementById('reportDetail');
+  try{
+    const r=await fetch('/api/report/'+encodeURIComponent(name));const d=await r.json();
+    if(!d.ok){alert('加载失败');return;}
+    list.style.display='none';
+    detail.style.display='block';
+    detail.innerHTML=`<div style="margin-bottom:8px"><button class="btn btn-s" onclick="document.getElementById('reportsList').style.display='block';document.getElementById('reportDetail').style.display='none'">← 返回列表</button> <span style="font-size:12px;font-weight:600;color:var(--text);margin-left:8px">${name}</span></div><div class="report-detail">${d.data.content}</div>`;
+  }catch(e){alert('加载失败');}
+}
+
+// ============ 反馈优化 ============
+async function loadFeedback(){
+  const el=document.getElementById('feedbackResult');
+  el.innerHTML='<div class="loading">加载中...</div>';
+  try{
+    const r=await fetch('/api/feedback');const d=await r.json();
+    if(!d.ok||!d.data.length){el.innerHTML='<div class="loading">暂无反馈记录</div>';return;}
+    let h='<table class="data-table"><thead><tr><th>日期</th><th>基金</th><th class="num">评分</th><th>建议</th><th class="num">收益</th><th>状态</th></tr></thead><tbody>';
+    d.data.slice(-20).reverse().forEach(fb=>{
+      const code=fb.fund_code||fb.code||'—';
+      const name=fb.fund_name||fb.name||'—';
+      const score=fb.quant_score||fb.score||'—';
+      const action=fb.action||fb.recommendation||'—';
+      const ret=fb.outcome?.return_pct;
+      const status=fb.outcome?.tracked?'已追踪':'待追踪';
+      h+=`<tr>
+        <td>${fb.date||fb.timestamp?.substring(0,10)||'—'}</td>
+        <td>${name} <span style="font-family:monospace;color:var(--muted)">${code}</span></td>
+        <td class="num">${typeof score==='number'?score.toFixed(2):score}</td>
+        <td>${action}</td>
+        <td class="num ${ret>0?'pos':ret<0?'neg':''}">${ret!=null?(ret>0?'+':'')+ret.toFixed(2)+'%':'—'}</td>
+        <td><span class="tag ${status==='已追踪'?'pass':'neutral'}">${status}</span></td>
+      </tr>`;
+    });
+    h+='</tbody></table>';
+    el.innerHTML=h;
+  }catch(e){el.innerHTML=`<div class="loading" style="color:var(--red)">加载失败</div>`;}
+}
+
+async function triggerTrack(){
+  const el=document.getElementById('feedbackResult');
+  el.innerHTML='<div class="loading">执行追踪与复盘中...</div>';
+  try{
+    const r=await fetch('/api/feedback/track',{method:'POST'});const d=await r.json();
+    if(!d.ok){el.innerHTML=`<div class="loading" style="color:var(--red)">错误: ${d.error}</div>`;return;}
+    let h=`<div style="margin-bottom:12px"><span class="tag pass">追踪完成</span> <span style="font-size:11px;color:var(--text2);margin-left:8px">追踪了 ${d.tracked_count} 条记录</span></div>`;
+    if(d.report){h+=`<div class="report-detail">${d.report}</div>`;}
+    if(d.optimization){
+      h+='<div class="panel-desc" style="margin-top:12px">权重优化</div>';
+      h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
+      Object.entries(d.optimization).forEach(([k,v])=>{
+        h+=`<div class="detail-item"><div class="dl">${k}</div><div class="dv">${typeof v==='number'?v.toFixed(3):v}</div></div>`;
+      });
+      h+='</div>';
+    }
+    el.innerHTML=h;
+  }catch(e){el.innerHTML=`<div class="loading" style="color:var(--red)">请求失败</div>`;}
+}
+
+async function loadPerformance(){
+  const el=document.getElementById('feedbackResult');
+  el.innerHTML='<div class="loading">加载中...</div>';
+  try{
+    const r=await fetch('/api/feedback/performance');const d=await r.json();
+    if(!d.ok){el.innerHTML=`<div class="loading" style="color:var(--red)">错误: ${d.error}</div>`;return;}
+    if(!d.data||!d.data.length){el.innerHTML='<div class="loading">暂无绩效数据</div>';return;}
+    let h='<table class="data-table"><thead><tr>';
+    Object.keys(d.data[0]).forEach(k=>{h+=`<th>${k}</th>`;});
+    h+='</tr></thead><tbody>';
+    d.data.forEach(row=>{
+      h+='<tr>';Object.values(row).forEach(v=>{h+=`<td>${v!=null?v:'—'}</td>`;});h+='</tr>';
+    });
+    h+='</tbody></table>';
+    el.innerHTML=h;
+  }catch(e){el.innerHTML=`<div class="loading" style="color:var(--red)">加载失败</div>`;}
+}
+
+// ============ Init ============
+render();connectSSE();
+gsap.to('.ambient-orb:nth-child(1)',{x:20,y:-15,duration:15,ease:'sine.inOut',yoyo:true,repeat:-1});
+gsap.to('.ambient-orb:nth-child(2)',{x:-20,y:10,duration:18,ease:'sine.inOut',yoyo:true,repeat:-1});
+window.addEventListener('resize',()=>setTimeout(drawLines,100));
+</script>
+</body>
+</html>
